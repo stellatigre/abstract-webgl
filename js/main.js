@@ -13,6 +13,13 @@ function randInt(min,max){
 	return Math.floor(Math.random() * (max-min)+1);
 }
 
+function gc(){			
+	var maxLength = 2000;			// get these objects out of use
+	if (cubes.length> maxLength) {
+		cubes.splice(0, cubes.length-maxLength)
+	}
+}
+
 function randomPos(shape, range) {
 
 	shape.applyMatrix( new THREE.Matrix4().makeTranslation(
@@ -50,7 +57,10 @@ function render() {
 	renderer.render(scene, camera);
 }
 
-makeCube()
+makeCube();
+
+setInterval(gc, 5000); // free objects not used every 5 seconds
+
 // big cubes
 setInterval(function(){
 	makeCube(2);
