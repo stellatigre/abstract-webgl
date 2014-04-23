@@ -29,8 +29,9 @@ function randomPos(shape, range) {
 }
 
 function moveToMouse(shape){
+
 	shape.applyMatrix( new THREE.Matrix4().makeTranslation(
-		mousePos.x/100, mousePos.y/100, 0
+		mousePos.x/200, -mousePos.y/200, 0
 		)
 	);	
 }
@@ -58,7 +59,6 @@ function render() {
 }
 
 makeCube();
-
 setInterval(gc, 5000); // free objects not used every 5 seconds
 
 // big cubes
