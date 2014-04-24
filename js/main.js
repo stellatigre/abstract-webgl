@@ -61,7 +61,7 @@ function render() {
 makeCube();
 setInterval(gc, 5000); // free objects not used every 5 seconds
 
-// big cubes
+/*// big cubes
 setInterval(function(){
 	makeCube(2);
 }, 250);
@@ -71,6 +71,7 @@ setInterval(function(){
 	var cube = makeCube(1); 
 	randomPos(cube, 1);
 }, 100);
+*/
 
 //tiny cubes
 setInterval(function() { 
@@ -78,5 +79,11 @@ setInterval(function() {
 	moveToMouse(cube);
 }, 25);
 
+//extra tiny
+setInterval(function() { 
+	var cube = makeCube(0.25);	
+	moveToMouse(cube);
+	randomPos(cube, 3);
+}, 10);
 
 render();
