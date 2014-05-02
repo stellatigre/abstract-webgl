@@ -7,7 +7,6 @@ document.body.appendChild( renderer.domElement );
 
 var cubes = [];
 camera.position.z = 8;
-camera.position.z = 8;
 
 function randInt(min,max){
 	return Math.floor(Math.random() * (max-min)+1);

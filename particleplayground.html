@@ -7,7 +7,10 @@
 		<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
 		<script src="js/three.min.js"></script>
 		<script src="js/ShaderParticles.min.js"></script>
+		<script src="js/dsp.js"></script>
 		<script src="js/mouse.js"></script>
+		<script src="js/sound.js"></script>
+		<script src="js/cube.js"></script>
 		<script type="text/javascript">
 			
 		// variables used in init()
@@ -60,7 +63,7 @@
         function initParticles() {
         	particleGroup = new SPE.Group({
         		texture: THREE.ImageUtils.loadTexture('./img/star.png'),
-        		maxAge: 30
+        		maxAge: 8
         	});
 
         	particleCursor = new SPE.Group({
@@ -73,20 +76,20 @@
         		position: new THREE.Vector3(0, 0, 0),
 
         		radius: 30,
-                speed: 10,
+                speed: .2,
 
         		colorStart: new THREE.Color('white'),
                 colorStartSpread: new THREE.Vector3(10, 10, 10),
         		colorEnd: new THREE.Color('purple'),
-        		sizeStart: 5,
-                sizeStartSpread: 2.5,
+        		sizeStart: 6,
+                sizeStartSpread: 4,
         		sizeEnd: .5,
 
                 opacityStart: .2,
                 opacityMiddle: .9,
                 opacityEnd: .4,
 
-        		particleCount: 10000,
+        		particleCount: 42000,
                 angleAlignVelocity: 1
         	});
 
@@ -96,21 +99,20 @@
         		position: new THREE.Vector3(0, 0, 0),
 
         		radius: 20,
-                speed: 10,
+                speed: .2,
 
         		colorStart: new THREE.Color('purple'),
                 colorStartSpread: new THREE.Vector3(5, 5, 5),
         		colorEnd: new THREE.Color('green'),
-        		sizeStart: 1.5,
-        		sizeEnd: .75,
+        		sizeStart: 2,
+        		sizeEnd: 1,
 
                 opacityStart: .8,
                 opacityMiddle: .5,
                 opacityEnd: .3,
 
-        		particleCount: 40000,
-                particlesPerSecond: 800,
-                angleAlignVelocity: 1
+        		particleCount: 60000,
+                particlesPerSecond: 2000,
         	});
             
             for (var n=1 ; n < 6 ; n++) {
@@ -123,7 +125,7 @@
                     position: new THREE.Vector3(n*5*dir, n*5*dir, n*5*dir),
                     positionSpread: new THREE.Vector3(n, n, n),
                     radius: 2*n,
-                    speed: 2*n,
+                    speed: n,
 
                     colorStart: new THREE.Color('blue'),
                     colorStartSpread: new THREE.Vector3(5, 5, 5),
@@ -165,7 +167,7 @@
         }
 
         function updateCamera() {
-            var now = Date.now() * 0.00003;
+            var now = Date.now() * 0.0001;
             camera.position.x = Math.sin( now ) * 50;
             camera.position.z = Math.cos( now ) * 100;
             camera.lookAt( scene.position );
@@ -195,7 +197,7 @@
         setTimeout(animate, 10);
         setInterval(function(){ 
             groupToMouse(particleCursor); 
-        }, 25);
+        }, 33);
 		</script>
 	</body>
 </html>
