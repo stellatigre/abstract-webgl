@@ -63,33 +63,33 @@
         function initParticles() {
         	particleGroup = new SPE.Group({
         		texture: THREE.ImageUtils.loadTexture('./img/star.png'),
-        		maxAge: 8
+        		maxAge: 4.2
         	});
 
         	particleCursor = new SPE.Group({
         		texture: THREE.ImageUtils.loadTexture('./img/smokeparticle.png'),
-        		maxAge: 2
+        		maxAge: 1.25
         	});
         	emitter = new SPE.Emitter({
                 type: 'sphere',
 
         		position: new THREE.Vector3(0, 0, 0),
 
-        		radius: 30,
-                speed: .2,
+        		radius: 28,
+                speed: .20,
 
-        		colorStart: new THREE.Color('white'),
+        		colorStart: new THREE.Color('blue'),
                 colorStartSpread: new THREE.Vector3(10, 10, 10),
         		colorEnd: new THREE.Color('purple'),
         		sizeStart: 6,
                 sizeStartSpread: 4,
         		sizeEnd: .5,
 
-                opacityStart: .2,
-                opacityMiddle: .9,
-                opacityEnd: .4,
+                opacityStart: .125,
+                opacityMiddle: .8,
+                opacityEnd: .42,
 
-        		particleCount: 42000,
+        		particleCount: 20000,
                 angleAlignVelocity: 1
         	});
 
@@ -98,23 +98,66 @@
 
         		position: new THREE.Vector3(0, 0, 0),
 
-        		radius: 20,
+        		radius: 24,
                 speed: .2,
 
         		colorStart: new THREE.Color('purple'),
-                colorStartSpread: new THREE.Vector3(5, 5, 5),
+                colorStartSpread: new THREE.Vector3(5, 5, 25),
         		colorEnd: new THREE.Color('green'),
         		sizeStart: 2,
         		sizeEnd: 1,
 
-                opacityStart: .8,
+                opacityStart: .75,
                 opacityMiddle: .5,
-                opacityEnd: .3,
+                opacityEnd: .25,
 
-        		particleCount: 60000,
+        		particleCount: 50000,
                 particlesPerSecond: 2000,
         	});
             
+        	smallerEmitter = new SPE.Emitter({
+                type: 'sphere',
+
+        		position: new THREE.Vector3(-20, 30, 25),
+
+        		radius: 75,
+                speed: 20,
+
+        		colorStart: new THREE.Color('purple'),
+                colorStartSpread: new THREE.Vector3(10, 15, 40),
+        		colorEnd: new THREE.Color('azure'),
+        		sizeStart: 5,
+        		sizeEnd: .5,
+
+                opacityStart: .25,
+                opacityMiddle: .2,
+                opacityEnd: .15,
+
+        		particleCount: 15000,
+                particlesPerSecond: 1000,
+        	});
+
+        	centerEmitter = new SPE.Emitter({
+                type: 'sphere',
+
+        		position: new THREE.Vector3(0, 0, 0),
+
+        		radius: 10,
+                speed: 2,
+
+        		colorStart: new THREE.Color('aqua'),
+                colorStartSpread: new THREE.Vector3(10, -25, 50),
+        		colorEnd: new THREE.Color('orange'),
+        		sizeStart: 2,
+        		sizeEnd: 4,
+
+                opacityStart: .5,
+                opacityMiddle: .3,
+                opacityEnd: .1,
+
+        		particleCount: 2000,
+                particlesPerSecond: 400,
+        	});
             for (var n=1 ; n < 6 ; n++) {
                 var dir = 1;
                 if (n%2 != 0){ 
@@ -125,20 +168,20 @@
                     position: new THREE.Vector3(n*5*dir, n*5*dir, n*5*dir),
                     positionSpread: new THREE.Vector3(n, n, n),
                     radius: 2*n,
-                    speed: n,
+                    speed: 1.25*n,
 
                     colorStart: new THREE.Color('blue'),
-                    colorStartSpread: new THREE.Vector3(5, 5, 5),
-                    colorEnd: new THREE.Color('purple'),
+                    colorStartSpread: new THREE.Vector3(5+n*2, 5, 5),
+                    colorEnd: new THREE.Color('aquamarine'),
                     colorEndSpread: new THREE.Vector3(10, 10, 10),
-                    sizeStart: .5,
-                    sizeEnd: 1,
+                    sizeStart: .75,
+                    sizeEnd: 1.25,
 
-                    opacityStart: .9,
-                    opacityMiddle: .6,
+                    opacityStart: .8,
+                    opacityMiddle: .55,
                     opacityEnd: .3,
 
-                    particleCount: 3000,
+                    particleCount: 800,
                     particlesPerSecond: 100,
                 });
                 console.log(starEmitter);
@@ -147,6 +190,8 @@
             
         	particleGroup.addEmitter( emitter );
         	particleGroup.addEmitter( smallEmitter );
+        	particleGroup.addEmitter( smallerEmitter );
+        	particleGroup.addEmitter( centerEmitter );
         	scene.add( particleGroup.mesh );
         	scene.add( particleCursor.mesh );
             console.log( particleCursor );
@@ -167,11 +212,14 @@
         }
 
         function updateCamera() {
-            var now = Date.now() * 0.0001;
+            var now = Date.now() * 0.0002 + fft_co/88000 ;
             camera.position.x = Math.sin( now ) * 50;
             camera.position.z = Math.cos( now ) * 100;
             camera.lookAt( scene.position );
         }
+
+        //var controls = new THREE.TrackballControls( camera ); 
+        //controls.target.set( 0, 0, 0 ) 
 
         function render( dt ) {
             particleGroup.tick( dt );
