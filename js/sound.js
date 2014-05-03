@@ -74,32 +74,34 @@ function audioAvailable(event) {
         //if (i%1000 == 0) { console.log(magnitude); }
         currentvalue[i]= magnitude;
         fft_co = magnitude;
-        particleGroup.emitters[1].speed = -5 + currentvalue[i]/4 ;              
-        particleGroup.emitters[1].particlesPerSecond = 20 + currentvalue[i]*30 ;
+        particleGroup.emitters[1].speed = -5 + currentvalue[i]/3.5 ;              
+        particleGroup.emitters[1].particlesPerSecond = 20 + currentvalue[i]*36 ;
         particleGroup.emitters[1].sizeStart = 2 + magnitude/3 ;              
         particleGroup.emitters[1].colorStartSpread = new THREE.Vector3(5+ magnitude/20, 5-magnitude/100, 5+magnitude/6);               
         particleGroup.emitters[2].particlesPerSecond = 1000 + currentvalue[i]*5 ;
-        particleGroup.emitters[2].sizeStart = 2 + magnitude/80 ;              
-        particleGroup.emitters[2].speed = 2 + magnitude/50 ;              
+        particleGroup.emitters[2].sizeStart = 2 + magnitude/50 ;              
+        particleGroup.emitters[2].speed = 2 + magnitude/30 ;              
         particleGroup.emitters[2].colorStartSpread = new THREE.Vector3(5+ magnitude/25, 5-magnitude/50, 5+magnitude/10);               
-        particleGroup.emitters[0].particlesPerSecond = 50 + currentvalue[i]*30 ;
-        particleGroup.emitters[0].speed = -10 + currentvalue[i]/4 ;
-        particleGroup.emitters[0].sizeStart = 2 + magnitude/20 ;              
-        particleGroup.emitters[0].radius = 28 - currentvalue[i]/42 ;
-        particleGroup.emitters[2].radius = 10 + currentvalue[i]/42 ;
+        particleGroup.emitters[0].particlesPerSecond = 50 + currentvalue[i]*36 ;
+        particleGroup.emitters[0].speed = -5 + currentvalue[i]/3.5 ;
+        particleGroup.emitters[0].sizeStart = 2 + magnitude/10 ;              
+        particleGroup.emitters[0].radius = 28 - currentvalue[i]/30 ;
+        particleGroup.emitters[2].radius = 10 + currentvalue[i]/36 ;
     }
 }
 
 var onError = function(err) { console.log('fucked something up'); }
 
 // begin doing stuff
-
 var jsProc = context.createScriptProcessor(8192);
-//loadSound('http://localhost:8000/audio/ellseedeez.mp3');
-//loadSound('http://localhost:8000/audio/06%205%20Lightning%20Bolt.mp3');
-//loadSound('http://localhost:8000/audio/Hope%20Continuum.mp3');
-loadSound('http://localhost:8000/audio/metropractice.mp3');
 jsProc.onaudioprocess = audioAvailable;
-setTimeout(function() { playSound(musicBuffer, jsProc) ; } , 6000);
-setTimeout(function() { jsProc.connect(context.destination); }, 6000);
+//loadSound('http://localhost:8000/audio/ellseedeez.mp3');
+//loadSound('http://localhost:8080/audio/06%205%20Lightning%20Bolt.mp3');
+//loadSound('http://localhost:8000/audio/Hope%20Continuum.mp3');
+loadSound('http://localhost/audio/02%20Kickflip.mp3');
+
+setTimeout(function() { 
+	playSound(musicBuffer, jsProc) ; 
+	jsProc.connect(context.destination);
+} , 7500);
 console.log('STARTING...');
