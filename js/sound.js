@@ -24,28 +24,9 @@ function playSound(buffer, destination) {
   source.start(0);
 }
 
-
-
-
 var theme = ["rgba(255, 255, 255,","rgba(240, 240, 240,","rgba(210, 210, 210,","rgba(180, 180, 180,","rgba(150, 150, 150,","rgba(120, 120, 150,","rgba(90, 90, 150,","rgba(60, 60, 180,","rgba(30, 30, 180,","rgba(0, 0, 200,","rgba(0, 0, 210,","rgba(0, 0, 220,","rgba(0, 0, 230,","rgba(0, 0, 240,","rgba(0, 0, 255,","rgba(0, 30, 255,","rgba(0, 60, 255,","rgba(0, 90, 255,","rgba(0, 120, 255,","rgba(0, 150, 255,"];
 
-var histoindex = 0;
-var histomax = 500;
-
-histobuffer_x = new Array();
-histobuffer_y = new Array();
-histobuffer_t = new Array();
-for (a=0;a<histomax;a++) {
-    histobuffer_t[a] = 0;
-}
-
-maxvalue = new Array();
-for (a=0;a<1024;a++) {
-    maxvalue[a] = 0;
-}
-
-currentvalue = new Array();
-
+var currentvalue = new Array();
 var frameBufferSize = 8192;
 var bufferSize = frameBufferSize/4;
 var signal = new Float32Array(bufferSize);
@@ -74,19 +55,20 @@ function audioAvailable(event) {
         //if (i%1000 == 0) { console.log(magnitude); }
         currentvalue[i]= magnitude;
         fft_co = magnitude;
-        particleGroup.emitters[1].speed = -5 + currentvalue[i]/3.5 ;              
-        particleGroup.emitters[1].particlesPerSecond = 20 + currentvalue[i]*36 ;
-        particleGroup.emitters[1].sizeStart = 2 + magnitude/3 ;              
-        particleGroup.emitters[1].colorStartSpread = new THREE.Vector3(5+ magnitude/20, 5-magnitude/100, 5+magnitude/6);               
-        particleGroup.emitters[2].particlesPerSecond = 1000 + currentvalue[i]*5 ;
-        particleGroup.emitters[2].sizeStart = 2 + magnitude/50 ;              
-        particleGroup.emitters[2].speed = 2 + magnitude/30 ;              
-        particleGroup.emitters[2].colorStartSpread = new THREE.Vector3(5+ magnitude/25, 5-magnitude/50, 5+magnitude/10);               
-        particleGroup.emitters[0].particlesPerSecond = 50 + currentvalue[i]*36 ;
-        particleGroup.emitters[0].speed = -5 + currentvalue[i]/3.5 ;
-        particleGroup.emitters[0].sizeStart = 2 + magnitude/10 ;              
-        particleGroup.emitters[0].radius = 28 - currentvalue[i]/30 ;
-        particleGroup.emitters[2].radius = 10 + currentvalue[i]/36 ;
+        emitters = particleGroup.emitters;
+        emitters[1].speed = -5 + fft_co/3 ;              
+        emitters[1].particlesPerSecond = 20 + fft_co*36 ;
+        emitters[1].sizeStart = 2 + fft_co/2.5 ;              
+        emitters[1].colorStartSpread = new THREE.Vector3(5+ fft_co/20, 5-fft_co/100, 5+fft_co/6);               
+        emitters[2].particlesPerSecond = 1000 + fft_co*5 ;
+        emitters[2].sizeStart = 2 + fft_co/42 ;              
+        emitters[2].speed = 2 + fft_co/30 ;              
+        emitters[2].colorStartSpread = new THREE.Vector3(5+ fft_co/25, 5-fft_co/50, 5+fft_co/10);               
+        emitters[0].particlesPerSecond = 50 + fft_co*36 ;
+        emitters[0].speed = -4 + fft_co/3.2 ;
+        emitters[0].sizeStart = 2 + fft_co/8 ;              
+        emitters[0].radius = 28 - fft_co/30 ;
+        emitters[2].radius = 10 + fft_co/36 ;
     }
 }
 
@@ -95,13 +77,10 @@ var onError = function(err) { console.log('fucked something up'); }
 // begin doing stuff
 var jsProc = context.createScriptProcessor(8192);
 jsProc.onaudioprocess = audioAvailable;
-//loadSound('http://localhost:8000/audio/ellseedeez.mp3');
-//loadSound('http://localhost:8080/audio/06%205%20Lightning%20Bolt.mp3');
-//loadSound('http://localhost:8000/audio/Hope%20Continuum.mp3');
-loadSound('http://localhost/audio/02%20Kickflip.mp3');
+loadSound('http://localhost:8080/audio/02%20Kickflip.mp3');
 
 setTimeout(function() { 
 	playSound(musicBuffer, jsProc) ; 
 	jsProc.connect(context.destination);
-} , 7500);
+} , 8500);
 console.log('STARTING...');

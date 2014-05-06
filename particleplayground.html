@@ -21,13 +21,14 @@
         var particleGroup = {};
         var projector = new THREE.Projector();
 		
+        /*
 		$('html').mousedown(function(event){
 			mouseClick.x = event.pageX;
 			mouseClick.y = event.pageY;
 			mouseClicked();
 			}
 		);
-
+        */
         function groupToMouse(group) {
             
             var vector = new THREE.Vector3(
@@ -44,7 +45,7 @@
                 element.position = pos;
             });
         }
-	
+	    /*
 		function mouseClicked() {
 			var vector = new THREE.Vector3(
                 ( mouseClick.x / window.innerWidth ) * 2 - 1,
@@ -84,7 +85,7 @@
         	});
 			scene.add( particleGroup.mesh );
 		}
-			
+        */
 		// Setup the scene
         function init() {
             scene = new THREE.Scene();
@@ -158,7 +159,7 @@
                 opacityMiddle: .5,
                 opacityEnd: .25,
 
-        		particleCount: 90000,
+        		particleCount: 75000,
                 particlesPerSecond: 2000,
         	});
             
@@ -259,7 +260,7 @@
         }
 
         function updateCamera() {
-            var now = Date.now() * 0.00025 + fft_co/88000 ;
+            var now = Date.now() * 0.00025 + fft_co/100000 ;
             camera.position.x = Math.sin( now ) * 50;
             camera.position.z = Math.cos( now ) * 100;
             camera.lookAt( scene.position );
