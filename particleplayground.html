@@ -7,6 +7,7 @@
 		<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
 		<script src="js/three.min.js"></script>
 		<script src="js/ShaderParticles.min.js"></script>
+		<script src="js/TrackballControls.js"></script>
 		<script src="js/dsp.js"></script>
 		<script src="js/mouse.js"></script>
 		<script src="js/sound.js"></script>
@@ -14,7 +15,7 @@
 		<script type="text/javascript">
 			
 		// variables used in init()
-        var scene, camera, renderer, stats, stats2, clock;
+        var scene, camera, renderer, stats, stats2, clock, controls;
 
         // Used in initParticles()
 		var emitter; 
@@ -96,6 +97,19 @@
             renderer = new THREE.WebGLRenderer();
             renderer.setSize( window.innerWidth, window.innerHeight );
             renderer.setClearColor(0x000000);
+			
+			controls = new THREE.TrackballControls( camera );
+
+			controls.rotateSpeed = 0.05;
+			controls.zoomSpeed = 0.2;
+			controls.panSpeed = 0.2;
+			controls.noZoom = false;
+			controls.noPan = false;
+
+			controls.staticMoving = false;
+			controls.dynamicDampingFactor = 0.8;
+
+			controls.keys = [ 65, 83, 68 ];
 
             //stats = new Stats();
             //clock = new THREE.Clock();
@@ -181,8 +195,30 @@
                 opacityMiddle: .2,
                 opacityEnd: .15,
 
-        		particleCount: 10000,
+        		particleCount: 7500,
                 particlesPerSecond: 1000,
+        	});
+			
+			smallerEmitter2 = new SPE.Emitter({
+                type: 'sphere',
+
+        		position: new THREE.Vector3(30, -20, -15),
+
+        		radius: 100,
+                speed: 42,
+
+        		colorStart: new THREE.Color('purple'),
+                colorStartSpread: new THREE.Vector3(-10, -15, -40),
+        		colorEnd: new THREE.Color('azure'),
+        		sizeStart: 5,
+        		sizeEnd: 2,
+
+                opacityStart: .2,
+                opacityMiddle: .3,
+                opacityEnd: .4,
+
+        		particleCount: 7500,
+                particlesPerSecond: 750,
         	});
 
         	centerEmitter = new SPE.Emitter({
@@ -239,6 +275,7 @@
         	particleGroup.addEmitter( emitter );
         	particleGroup.addEmitter( smallEmitter );
         	particleGroup.addEmitter( smallerEmitter );
+			particleGroup.addEmitter( smallerEmitter2 );
         	particleGroup.addEmitter( centerEmitter );
         	scene.add( particleGroup.mesh );
         	scene.add( particleCursor.mesh );
@@ -253,7 +290,7 @@
 
         function animate() {
             requestAnimationFrame( animate );
-
+			controls.update();
             // Using a fixed time-step here to avoid pauses
             render( 0.016 );
             //stats.update();
