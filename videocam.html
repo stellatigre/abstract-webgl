@@ -1,0 +1,136 @@
+<html>
+	<head>
+		<title>Silly Cubes</title>
+		<style>canvas { width: 100%; height: 100% }</style>
+	</head>
+	<body>
+		<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+		<script src="js/three.min.js"></script>
+		<script src="js/ShaderParticles.min.js"></script>
+		<script src="js/TrackballControls.js"></script>
+		<script src="js/dsp.js"></script>
+		<script src="js/mouse.js"></script>
+
+		<script src="js/cube.js"></script>
+		<script type="text/javascript">
+			
+		// variables used in init()
+        var scene, camera, renderer, stats, stats2, clock, controls;
+
+        // Used in initParticles()
+		var emitter; 
+        var particleGroup = {};
+        var projector = new THREE.Projector();
+		
+		video      = document.createElement('video');
+		video.width    = 480;
+		video.height   = 720;
+		video.autoplay = true;
+		
+		navigator.getUserMedia = 
+			navigator.getUserMedia || navigator.webkitGetUserMedia || 
+			navigator.mozGetUserMedia || navigator.msGetUserMedia;
+			
+		if (navigator.getUserMedia){
+				navigator.getUserMedia({video:true}, function(stream){
+				video.src    = webkitURL.createObjectURL(stream);
+			}, function(error){
+				console.log("Failed to get a stream due to", error);
+			});
+		}
+		
+		var videoTexture = new THREE.Texture( video );
+		var videoMaterial   = new THREE.MeshLambertMaterial({
+			map : videoTexture
+		});
+		
+		
+
+        function groupToMouse(group) {
+            
+            var vector = new THREE.Vector3(
+                ( mousePos.x / window.innerWidth ) * 2 - 1,
+                - ( mousePos.y / window.innerHeight ) * 2 + 1,
+                0.5 );
+
+            projector.unprojectVector( vector, camera );
+            var dir = vector.sub( camera.position ).normalize();
+            var distance = - camera.position.z / dir.z;
+            var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
+
+            group.emitters.forEach(function(element, index, array) {
+                element.position = pos;
+            });
+        }
+	    
+		function mouseClicked() {
+			var vector = new THREE.Vector3(
+                ( mouseClick.x / window.innerWidth ) * 2 - 1,
+                - ( mouseClick.y / window.innerHeight ) * 2 + 1,
+                0.5 );
+
+			projector.unprojectVector( vector, camera );
+            var dir = vector.sub( camera.position ).normalize();
+            var distance = 50;
+            var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
+				
+			console.log(pos);
+		}
+        
+		// Setup the scene
+		function initTrackball() {
+			controls = new THREE.TrackballControls( camera );
+
+			controls.rotateSpeed = 0.05;
+			controls.zoomSpeed = 0.2;
+			controls.panSpeed = 0.2;
+			controls.noZoom = false;
+			controls.noPan = false;
+
+			controls.staticMoving = false;
+			controls.dynamicDampingFactor = 0.8;
+
+			controls.keys = [ 65, 83, 68 ];
+		}
+		
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 10000);
+            camera.position.z = 42;
+            camera.lookAt( scene.position );
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setClearColor(0x000000);
+		}	
+	
+		 function animate() {
+            requestAnimationFrame( animate );
+			//controls.update();
+            // Using a fixed time-step here to avoid pauses
+            render( 0.016 );
+        }
+
+        function updateCamera() {
+            var now = Date.now() * 0.00025 ;
+            camera.position.x = Math.sin( now ) * 50;
+            camera.position.z = Math.cos( now ) * 100;
+            camera.lookAt( scene.position );
+        }
+
+        function render( dt ) {
+			if( video.readyState === video.HAVE_ENOUGH_DATA ){
+				videoTexture.needsUpdate = true;
+			}
+			updateCamera();
+            renderer.render( scene, camera );
+        }
+		
+		init();
+		animate();
+		var plane = new THREE.Mesh(new THREE.PlaneGeometry(160, 90), videoMaterial);
+		plane.overdraw = true;
+		scene.add(plane);
+		</script>
+	</body>
+</html>

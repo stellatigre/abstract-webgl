@@ -7,8 +7,8 @@
 		<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
 		<script src="js/three.min.js"></script>
 		<script src="js/ShaderParticles.min.js"></script>
-		<script src="js/TrackballControls.js"></script>
-		<script src="js/dsp.js"></script>
+		<script src="js/TrackballControls.min.js"></script>
+		<script src="js/dsp.min.js"></script>
 		<script src="js/mouse.js"></script>
 		<script src="js/sound.js"></script>
 		<script src="js/cube.js"></script>
@@ -46,7 +46,7 @@
                 element.position = pos;
             });
         }
-	    /*
+	    
 		function mouseClicked() {
 			var vector = new THREE.Vector3(
                 ( mouseClick.x / window.innerWidth ) * 2 - 1,
@@ -55,49 +55,15 @@
 
 			projector.unprojectVector( vector, camera );
             var dir = vector.sub( camera.position ).normalize();
-            var distance = - camera.position.z / dir.z;
+            var distance = 50;
             var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
 				
-			var particleGroup = new SPE.Group({
-        		texture: THREE.ImageUtils.loadTexture('./img/bullet.png'),
-        		maxAge: 3
-        	});
-			
-			var emitter = new SPE.Emitter({
-                type: 'sphere',
-
-        		position: pos,
-        		radius: 5,
-                speed: 5,
-
-        		colorStart: new THREE.Color('red'),
-                colorStartSpread: new THREE.Vector3(10, 10, 10),
-        		colorEnd: new THREE.Color('orange'),
-        		sizeStart: .25,
-                sizeStartSpread: 4,
-        		sizeEnd: 5,
-
-                opacityStart: .2,
-                opacityMiddle: .42,
-                opacityEnd: .15,
-
-        		particleCount: 4200,
-                angleAlignVelocity: 1
-        	});
-			scene.add( particleGroup.mesh );
+			console.log(pos);
+			makeCube(1, pos);
 		}
-        */
+        
 		// Setup the scene
-        function init() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 10000);
-            camera.position.z = 42;
-            camera.lookAt( scene.position );
-
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize( window.innerWidth, window.innerHeight );
-            renderer.setClearColor(0x000000);
-			
+		function initTrackball() {
 			controls = new THREE.TrackballControls( camera );
 
 			controls.rotateSpeed = 0.05;
@@ -110,10 +76,22 @@
 			controls.dynamicDampingFactor = 0.8;
 
 			controls.keys = [ 65, 83, 68 ];
+		}
+		
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 10000);
+            camera.position.z = 42;
+            camera.lookAt( scene.position );
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setClearColor(0x000000);
+			
+			initTrackball();
 
             //stats = new Stats();
             //clock = new THREE.Clock();
-
             //stats.domElement.style.position = 'absolute';
             //stats.domElement.style.top = '0';
 
@@ -148,8 +126,8 @@
         		sizeEnd: .5,
 
                 opacityStart: .125,
-                opacityMiddle: .8,
-                opacityEnd: .42,
+                opacityMiddle: .75,
+                opacityEnd: .5,
 
         		particleCount: 25000,
                 angleAlignVelocity: 1
@@ -169,9 +147,9 @@
         		sizeStart: 2,
         		sizeEnd: 1,
 
-                opacityStart: .75,
-                opacityMiddle: .5,
-                opacityEnd: .25,
+                opacityStart: .85,
+                opacityMiddle: .6,
+                opacityEnd: .3,
 
         		particleCount: 75000,
                 particlesPerSecond: 2000,
@@ -310,7 +288,14 @@
             particleGroup.tick( dt );
             particleCursor.tick( dt );
             updateCamera();
+			cubes.forEach(function(cube, index, array) {
+				cube.rotation.x += 0.1;
+				cube.rotation.y += 0.1;
+				cube.position.x -= 0.1;
+			});
+	
             renderer.render( scene, camera );
+			
         }
 
 
