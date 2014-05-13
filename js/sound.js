@@ -2,10 +2,11 @@ var musicBuffer = null;
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 var context = new AudioContext();
 var fft_co = 1;
+var loadDelay = 10000;
 
-function onError(err) { console.log('fucked something up'); }
+function onError(err) { console.log('fucked something up...\n'+err); }
 
-function loadSound(url) {
+function loadSound(url, callback) {
   var request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.responseType = 'arraybuffer';
@@ -13,8 +14,11 @@ function loadSound(url) {
   // Decode asynchronously
   request.onload = function() {
     context.decodeAudioData(request.response, function(buffer) {
-      musicBuffer = buffer;
-    }, onError);
+    	musicBuffer = buffer;
+		if (callback != undefined) {
+	    	setTimeout(callback, 1000);
+    	}
+	});
   }
   request.send();
 }
@@ -74,13 +78,14 @@ function audioAvailable(event) {
     }
 }
 
-// begin doing stuff
-var jsProc = context.createScriptProcessor(8192);
-jsProc.onaudioprocess = audioAvailable;
-loadSound('http://localhost:8080/audio/02%20Kickflip.mp3');
-
-setTimeout(function() { 
+function startMusic() {
+	var jsProc = context.createScriptProcessor(8192);
+	jsProc.onaudioprocess = audioAvailable;
 	playSound(musicBuffer, jsProc) ; 
 	jsProc.connect(context.destination);
-} , 7500);
-console.log('STARTING...');
+	console.log('BEGINNING WEB AUDIO PLAYBACK...');
+}
+
+// begin doing stuff
+loadSound('http://stellatigre.com/audio/metropractice.mp3', startMusic);
+console.log('LOADING...');
